@@ -42,6 +42,35 @@ namespace a1.Controllers
             return course;
         }
 
+        // GET: api/Courses/5/clone
+        [HttpGet("{id}/clone")]
+        public async Task<ActionResult<Course>> CloneCourse(int id)
+        {
+            var course = await _context.Courses.FindAsync(id);
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            // Method 1: ValueInjecter
+            var newitem = new Course();
+            newitem.InjectFrom(course);
+            _context.Courses.Add(newitem);
+            _context.SaveChanges();
+
+            // Method 2: ValueInjecter
+            var newitem3 = Mapper.Map<Course>(course);
+            _context.Courses.Add(newitem3);
+            _context.SaveChanges();
+
+            // Method 3: Hacky way
+            _context.Entry(course).State = EntityState.Added;
+            _context.SaveChanges();
+
+            return course;
+        }
+
         // GET: api/Courses/5
         [HttpGet("{id}/department")]
         public async Task<ActionResult<Department>> GetCourseDepartment(int id)
