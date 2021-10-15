@@ -25,7 +25,7 @@ namespace a1.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Course>>> GetCourses()
         {
-            return await _context.Courses.ToListAsync();
+            return await _context.Courses.AsNoTracking().ToListAsync();
         }
 
         // GET: api/Courses/5
