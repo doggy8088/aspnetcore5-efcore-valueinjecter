@@ -103,6 +103,38 @@ namespace a1.Controllers
             return NoContent();
         }
 
+        // DELETE /api/Courses
+        [HttpDelete]
+        public async Task<IActionResult> DeleteManyCourse(int[] ids)
+        {
+            foreach (var id in ids)
+            {
+                // var course = await _context.Courses.FindAsync(id);
+                // if (course != null)
+                // {
+                //     _context.Courses.Remove(course);
+                // }
+
+                _context.Courses.Remove(new Course { CourseId = id });
+            }
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE /api/Courses/byDept/{id}
+        [HttpDelete("byDept/{id}")]
+        public async Task<IActionResult> DeleteByDepartment(int id)
+        {
+            var data = await _context.Courses.Where(p => p.DepartmentId == id).ToListAsync();
+
+            _context.Courses.RemoveRange(data);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         private bool CourseExists(int id)
         {
             return _context.Courses.Any(e => e.CourseId == id);
