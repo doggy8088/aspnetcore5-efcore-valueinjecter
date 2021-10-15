@@ -42,6 +42,22 @@ namespace a1.Controllers
             return course;
         }
 
+        // GET: api/Courses/5
+        [HttpGet("{id}/department")]
+        public async Task<ActionResult<Department>> GetCourseDepartment(int id)
+        {
+            var course = await _context.Courses
+                .Include(p => p.Department)
+                .FirstOrDefaultAsync(p => p.CourseId == id);
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            return course.Department;
+        }
+
         // PUT: api/Courses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -56,6 +72,8 @@ namespace a1.Controllers
 
             // _context.Entry(course).State = EntityState.Modified;
             // _context.Update(course);
+
+            // _context.Database.ExecuteSqlRaw("UPDATE dbo.Course SET Rating=Rating-1 WHERE CourseId=@p1 AND Rating>0", id);
 
             try
             {
