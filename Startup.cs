@@ -29,8 +29,17 @@ namespace a1
         public void ConfigureServices(IServiceCollection services)
         {
             // using Microsoft.EntityFrameworkCore;
-            services.AddDbContext<ContosoUniversityContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ContosoUniversityContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+
+#if DEBUG
+                options.EnableSensitiveDataLogging();
+#endif
+
+                options.LogTo((msg) => {
+                    Console.WriteLine(msg);
+                });
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
